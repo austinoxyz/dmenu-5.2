@@ -363,6 +363,14 @@ fuzzymatch(void)
 		}
 		free(fuzzymatches);
 	}
+
+    /* For `instant` compatibility with `fuzzymatch` */
+	if(instant && number_of_matches == 1 && matches && matches==matchend) {
+		puts(matches->text);
+		cleanup();
+		exit(0);
+	}
+
 	curr = sel = matches;
 	calcoffsets();
 }
