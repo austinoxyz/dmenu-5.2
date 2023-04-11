@@ -1,0 +1,87 @@
+diff --git a/../dmenu.c b/../../dmenu-5.2-remove-empty-cursor/dmenu.c
+index ba4132c..079fe94 100644
+--- a/../dmenu.c
++++ b/../../dmenu-5.2-remove-empty-cursor/dmenu.c
+@@ -45,6 +45,8 @@ static struct item *matches, *matchend;
+ static struct item *prev, *curr, *next, *sel;
+ static int mon = -1, screen;
+ 
++static int empty_prompt = 0;
++
+ static Atom clip, utf8;
+ static Display *dpy;
+ static Window root, parentwin, win;
+@@ -174,30 +176,32 @@ drawmenu(void)
+ 	curpos = TEXTW(text) - TEXTW(&text[cursor]);
+ 	if ((curpos += lrpad / 2 - 1) < w) {
+ 		drw_setscheme(drw, scheme[SchemeNorm]);
+-		drw_rect(drw, x + curpos, 2, 2, bh - 4, 1, 0);
++        drw_rect(drw, x + curpos, 2, 2, bh - 4, 1, 0);
+ 	}
+ 
+-	if (lines > 0) {
+-		/* draw vertical list */
+-		for (item = curr; item != next; item = item->right)
+-			drawitem(item, x, y += bh, mw - x);
+-	} else if (matches) {
+-		/* draw horizontal list */
+-		x += inputw;
+-		w = TEXTW("<");
+-		if (curr->left) {
+-			drw_setscheme(drw, scheme[SchemeNorm]);
+-			drw_text(drw, x, 0, w, bh, lrpad / 2, "<", 0);
+-		}
+-		x += w;
+-		for (item = curr; item != next; item = item->right)
+-			x = drawitem(item, x, 0, textw_clamp(item->text, mw - x - TEXTW(">")));
+-		if (next) {
+-			w = TEXTW(">");
+-			drw_setscheme(drw, scheme[SchemeNorm]);
+-			drw_text(drw, mw - w, 0, w, bh, lrpad / 2, ">", 0);
+-		}
+-	}
++    if (!empty_prompt) {
++        if (lines > 0) {
++            /* draw vertical list */
++            for (item = curr; item != next; item = item->right)
++                drawitem(item, x, y += bh, mw - x);
++        } else if (matches) {
++            /* draw horizontal list */
++            x += inputw;
++            w = TEXTW("<");
++            if (curr->left) {
++                drw_setscheme(drw, scheme[SchemeNorm]);
++                drw_text(drw, x, 0, w, bh, lrpad / 2, "<", 0);
++            }
++            x += w;
++            for (item = curr; item != next; item = item->right)
++                x = drawitem(item, x, 0, textw_clamp(item->text, mw - x - TEXTW(">")));
++            if (next) {
++                w = TEXTW(">");
++                drw_setscheme(drw, scheme[SchemeNorm]);
++                drw_text(drw, mw - w, 0, w, bh, lrpad / 2, ">", 0);
++            }
++        }
++    }
+ 	drw_map(drw, win, 0, 0, mw, mh);
+ }
+ 
+@@ -564,6 +568,10 @@ readstdin(void)
+ 
+ 	/* read each line from stdin and add it to the item list */
+ 	for (i = 0; (len = getline(&line, &junk, stdin)) != -1; i++, line = NULL) {
++        if (i == 0 && len == 1 && *line == 10) {
++            empty_prompt = 1;
++        }
++
+ 		if (i + 1 >= size / sizeof *items)
+ 			if (!(items = realloc(items, (size += BUFSIZ))))
+ 				die("cannot realloc %zu bytes:", size);
+@@ -574,6 +582,7 @@ readstdin(void)
+ 	}
+ 	if (items)
+ 		items[i].text = NULL;
++
+ 	lines = MIN(lines, i);
+ }
+ 
