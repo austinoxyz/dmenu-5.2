@@ -4,6 +4,10 @@ dmenu \- dynamic menu
 .SH SYNOPSIS
 .B dmenu
 .RB [ \-bfinv ]
+.RB [ \-g
+.IR columns ]
+.RB [ \-g
+.IR columns ]
 .RB [ \-l
 .IR lines ]
 .RB [ \-h
@@ -60,11 +64,17 @@ is faster, but will lock up X until stdin reaches end\-of\-file.
 .B \-i
 dmenu matches menu items case insensitively.
 .TP
+.BI \-g " columns"
+dmenu lists items in a grid with the given number of columns.
+.TP
 .B \-n
 dmenu instantly selects if only one match.
 .TP
+.BI \-g " columns"
+dmenu lists items in a grid with the given number of columns.
+.TP
 .BI \-l " lines"
-dmenu lists items vertically, with the given number of lines.
+dmenu lists items in a grid with the given number of lines.
 .TP
 .BI \-h " height"
 dmenu uses a menu line of at least 'height' pixels tall, but no less than 8.
@@ -105,6 +115,9 @@ defines the selected highlight background color.
 .TP
 .BI \-shf " color"
 defines the selected highlight foreground color.
+.TP
+.BI \-is " ignore spaces"
+ignore all spacebar keypresses.
 .TP
 .B \-v
 prints version information to stdout, then exits.

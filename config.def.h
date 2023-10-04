@@ -13,17 +13,21 @@ static const char *fonts[] = {
 static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
 static const char *colors[SchemeLast][2] = {
 	/*     fg         bg       */
-	[SchemeNorm] = { "#839496", "#002b36" },
-	[SchemeSel] = { "#839496", "#073642"},
-	[SchemeNormHighlight] = { "#ffc978", "#002b36" },
-	[SchemeSelHighlight] = { "#e20000", "#073642" },
-	[SchemeOut] = { "#000000", "#00ffff" },
+	[SchemeNorm] = { "#ebdbb2", "#282828" },
+	[SchemeSel] = { "#ebdbb2", "#0e2172"},
+	[SchemeNormHighlight] = { "#ffc978", "#282828" },
+	[SchemeSelHighlight] = { "#e20000", "#0e2172" },
+	[SchemeOut] = { "#ebdbb2", "#8ec07c" },
 };
-/* -l option; if nonzero, dmenu uses vertical list with given number of lines */
+/* -l and -g options; controls number of lines and columns in grid if > 0 */
 static unsigned int lines      = 0;
+static unsigned int columns    = 0;
 /* -h option; minimum height of a menu line */
 static unsigned int lineheight = 0;
 static unsigned int min_lineheight = 8;
+
+//static size_t n_ignored_chars = 0;
+//static char ignored_chars[n_ignored_chars] = {};
 
 /*
  * Characters not considered part of a word while deleting words
